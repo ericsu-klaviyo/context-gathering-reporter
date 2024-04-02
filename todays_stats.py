@@ -7,9 +7,9 @@ from report_parser import parse_report
 from tabulate import tabulate, SEPARATING_LINE
 
 class TodaysStatsReporter:
-    def __init__(self, date_stamp: str, compact=False, suppress=False):
+    def __init__(self, date_stamp: str, summary=False, suppress=False):
         self.date_stamp = date_stamp
-        self.compact = compact
+        self.summary = summary
         self.suppress = suppress
         self.team_names = [
             c.FLOWS_INTERFACE_TEAM_NAME,
@@ -50,7 +50,7 @@ class TodaysStatsReporter:
             print(tabulate([names]))
             parse_report(self.get_report_path(names.lower()))
 
-    def print_compact_report(self):
+    def print_summary_report(self):
         top_level_table_data = []
 
         if len(self.team_names) == 0:
@@ -61,8 +61,8 @@ class TodaysStatsReporter:
                 top_level_table_data.extend(
                     parse_report(
                         self.get_report_path(name.lower()),
-                        compact=True,
-                        total_domain_name=name,
+                        summary=True,
+                        summary_domain_name=name,
                         silent=True
                     )
                 )
@@ -79,15 +79,15 @@ class TodaysStatsReporter:
     def get_reports(self):
         print(f"{self.date_stamp}\n")
 
-        if self.compact:
-            self.print_compact_report()
+        if self.summary:
+            self.print_summary_report()
         else:
             self.print_full_report()
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Parse today's context gathering reports.")
-    parser.add_argument("--compact", action="store_true", help="Print a compact version of the report.")
+    parser.add_argument("--summary", action="store_true", help="Print a high-level summary of the report.")
     parser.add_argument("--suppress", action="store_true", help="Suppress errors and return what is available.")
     parser.add_argument("--date", help="If not today, when?")
     parser.add_argument("--duplicates", action="store_true", help="Find duplicate domains.")
@@ -95,7 +95,7 @@ if __name__ == "__main__":
 
     stats_reporter = TodaysStatsReporter(
         date.today().isoformat() if not args.date else args.date,
-        args.compact,
+        args.summary,
         args.suppress
     )
 
