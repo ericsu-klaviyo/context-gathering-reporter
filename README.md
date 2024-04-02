@@ -45,7 +45,7 @@ web-feeds                            10  26%
 
 For Flows, to summarize all of today's reports (assuming they've been downloaded and named appropriately):
 ```
-> python todays_stats.py --compact
+> python todays_stats.py --summary
 
 2024-04-02
 

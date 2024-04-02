@@ -17,7 +17,7 @@ def print_report_table(table_data):
         )
     )
 
-def parse_report(filepath, compact=False, compact_domain_name="Total", silent=False):
+def parse_report(filepath, summary=False, summary_domain_name="Total", silent=False):
     if not filepath or not os.path.exists(filepath):
         raise FileNotFoundError(f"File not found: {filepath}")
 
@@ -45,13 +45,13 @@ def parse_report(filepath, compact=False, compact_domain_name="Total", silent=Fa
                 'num_missing': num_missing,
                 'pct_missing': 1 if num_found == 0 else printable_percent(num_missing, num_found+num_missing),
             }
-            if not compact:
+            if not summary:
                 domain_table_data.append([domain, num_missing, f"{domain_high_level_stats[domain]['pct_missing']}%"])
         
         total_missing = report_json.get('totalMissing')
-        if not compact:
+        if not summary:
             domain_table_data.append(SEPARATING_LINE)
-        total_name = "Total" if not compact_domain_name else compact_domain_name
+        total_name = "Total" if not summary_domain_name else summary_domain_name
         domain_table_data.append([total_name, total_missing, f"{printable_percent(total_missing, total_keys)}%"])
     
     if total_keys > 0:
@@ -65,14 +65,14 @@ def parse_report(filepath, compact=False, compact_domain_name="Total", silent=Fa
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Parse a context gathering report.")
     parser.add_argument("filepath", help="The path to the report file.")
-    parser.add_argument("--compact", action="store_true", help="Print a compact version of the report.")
+    parser.add_argument("--summary", action="store_true", help="Print a high-level summary of the report.")
     parser.add_argument("--date", help="The date of the report.")
     parser.add_argument("--silent", action="store_true", help="Do not print the report.")
     args = parser.parse_args()
 
     if args.date and not args.silent:
         print(f"{args.date}\n")
-    parse_report(args.filepath, args.compact, args.silent)
+    parse_report(args.filepath, args.summary, args.silent)
 
 
 
