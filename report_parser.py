@@ -2,7 +2,7 @@ import argparse
 import json
 import os
 
-from constants import TABLE_HEADERS, TABLE_COLALIGN
+from constants import TABLE_HEADERS, TABLE_COLALIGN, TOTAL_STR
 from tabulate import tabulate, SEPARATING_LINE
 
 def printable_percent(numerator, denominator):
@@ -17,7 +17,7 @@ def print_report_table(table_data):
         )
     )
 
-def parse_report(filepath, compact=False, compact_domain_name="Total", silent=False):
+def parse_report(filepath, compact=False, total_domain_name=TOTAL_STR, silent=False):
     if not filepath or not os.path.exists(filepath):
         raise FileNotFoundError(f"File not found: {filepath}")
 
@@ -51,8 +51,7 @@ def parse_report(filepath, compact=False, compact_domain_name="Total", silent=Fa
         total_missing = report_json.get('totalMissing')
         if not compact:
             domain_table_data.append(SEPARATING_LINE)
-        total_name = "Total" if not compact_domain_name else compact_domain_name
-        domain_table_data.append([total_name, total_missing, f"{printable_percent(total_missing, total_keys)}%"])
+        domain_table_data.append([total_domain_name, total_missing, f"{printable_percent(total_missing, total_keys)}%"])
     
     if total_keys > 0:
         if not silent:
