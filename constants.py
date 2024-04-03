@@ -7,5 +7,5 @@ FLOWS_IMS_TEAM_NAME = "FLIMS"
 FLOWS_PLATFORM_TEAM_NAME = "Platform"
 
 DOMAIN_OWNERSHIP = {
-    "filter-builder": FLOWS_IMS_TEAM_NAME,
+    "filter-builder": FLOWS_IMS_TEAM_NAME.lower(),
 }
