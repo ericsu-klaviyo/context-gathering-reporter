@@ -40,10 +40,12 @@ def parse_report(filepath, summary=False, summary_domain_name="Total", silent=Fa
             num_missing = data.get('stats', {}).get('missingCount', 0)
             total_keys += num_missing
 
+            domain_total = num_found + num_missing
+
             domain_high_level_stats[domain] = {
                 'num_found': num_found,
                 'num_missing': num_missing,
-                'pct_missing': 1 if num_found == 0 else printable_percent(num_missing, num_found+num_missing),
+                'pct_missing': 1 if domain_total == 0 else printable_percent(num_missing, domain_total),
             }
             if not summary:
                 domain_table_data.append([domain, num_missing, f"{domain_high_level_stats[domain]['pct_missing']}%"])
