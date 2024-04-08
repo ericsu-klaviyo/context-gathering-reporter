@@ -13,12 +13,13 @@ class TodaysStatsReporter:
         self.suppress = suppress
         self.team_names = [
             c.FLOWS_INTERFACE_TEAM_NAME,
-            c.FLOWS_IMS_TEAM_NAME,
+            c.FLOWS_IM_TEAM_NAME,
             c.FLOWS_PLATFORM_TEAM_NAME
         ]
 
     def get_report_path(self, team: str):
-        path = f"reports/{self.date_stamp}/{team}.json"
+        filename = c.TEAM_NAME_TO_FILE_NAME.get(team, team.lower())
+        path = f"reports/{self.date_stamp}/{filename}.json"
         if not os.path.exists(path) and not self.suppress:
             raise FileNotFoundError(f"File not found: {path}")
 
@@ -28,7 +29,7 @@ class TodaysStatsReporter:
         domains = set()
         duplicate_domains = set()
         for name in self.team_names:
-            team_table_data = parse_report(self.get_report_path(name.lower()), silent=True)
+            team_table_data = parse_report(self.get_report_path(name), silent=True)
             for row in team_table_data:
                 if row == SEPARATING_LINE:
                     continue
@@ -46,9 +47,10 @@ class TodaysStatsReporter:
         print()
 
     def print_full_report(self):
-        for names in self.team_names:
-            print(tabulate([names]))
-            parse_report(self.get_report_path(names.lower()))
+        for name in self.team_names:
+            print(tabulate([name]))
+            parse_report(self.get_report_path(name))
+            print()
 
     def print_summary_report(self):
         top_level_table_data = []
@@ -60,7 +62,7 @@ class TodaysStatsReporter:
             for name in self.team_names:
                 top_level_table_data.extend(
                     parse_report(
-                        self.get_report_path(name.lower()),
+                        self.get_report_path(name),
                         summary=True,
                         summary_domain_name=name,
                         silent=True
