@@ -2,7 +2,7 @@ import argparse
 import json
 import os
 
-from constants import TABLE_HEADERS, TABLE_COLALIGN
+from constants import TABLE_HEADERS, TABLE_COLALIGN, TOTAL_STR, DOMAIN_OWNERSHIP
 from tabulate import tabulate, SEPARATING_LINE
 
 def printable_percent(numerator, denominator):
@@ -17,7 +17,7 @@ def print_report_table(table_data):
         )
     )
 
-def parse_report(filepath, summary=False, summary_domain_name="Total", silent=False):
+def parse_report(filepath, summary=False, summary_domain_name=TOTAL_STR, silent=False):
     if not filepath or not os.path.exists(filepath):
         raise FileNotFoundError(f"File not found: {filepath}")
 
@@ -27,6 +27,8 @@ def parse_report(filepath, summary=False, summary_domain_name="Total", silent=Fa
     domain_high_level_stats = {}
     domain_table_data = []
 
+    team_name_lower = os.path.basename(filepath).replace('.json', '')
+
     with open(filepath, 'r') as report_file:
         report_json = json.load(report_file)
 
@@ -34,10 +36,13 @@ def parse_report(filepath, summary=False, summary_domain_name="Total", silent=Fa
         # client/shared/i18n/translations/{DOMAIN}/en-US/translations.json
         for translation_filepath, data in report_json.get('files', {}).items():
             domain = translation_filepath.replace('client/shared/i18n/translations/', '').replace('/en-US/translations.json', '')
+            if domain in DOMAIN_OWNERSHIP and DOMAIN_OWNERSHIP[domain] != team_name_lower:
+                continue
 
             num_found = data.get('stats', {}).get('foundCount', 0)
             total_keys += num_found
             num_missing = data.get('stats', {}).get('missingCount', 0)
+            total_missing += num_missing
             total_keys += num_missing
 
             domain_total = num_found + num_missing
@@ -50,11 +55,9 @@ def parse_report(filepath, summary=False, summary_domain_name="Total", silent=Fa
             if not summary:
                 domain_table_data.append([domain, num_missing, f"{domain_high_level_stats[domain]['pct_missing']}%"])
         
-        total_missing = report_json.get('totalMissing')
         if not summary:
             domain_table_data.append(SEPARATING_LINE)
-        total_name = "Total" if not summary_domain_name else summary_domain_name
-        domain_table_data.append([total_name, total_missing, f"{printable_percent(total_missing, total_keys)}%"])
+        domain_table_data.append([summary_domain_name, total_missing, f"{printable_percent(total_missing, total_keys)}%"])
     
     if total_keys > 0:
         if not silent:
