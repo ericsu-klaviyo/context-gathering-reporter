@@ -3,6 +3,7 @@ import os
 import constants as c
 
 from datetime import date
+from pathlib import Path
 from report_parser import parse_report
 from tabulate import tabulate, SEPARATING_LINE
 
@@ -11,15 +12,12 @@ class TodaysStatsReporter:
         self.date_stamp = date_stamp
         self.summary = summary
         self.suppress = suppress
-        self.team_names = [
-            c.FLOWS_INTERFACE_TEAM_NAME,
-            c.FLOWS_IM_TEAM_NAME,
-            c.FLOWS_PLATFORM_TEAM_NAME
-        ]
 
-    def get_report_path(self, team: str):
+        self.file_names = os.listdir(os.path.join(c.REPORTS_BASE_PATH, self.date_stamp))
+
+    def get_team_report_path(self, team: str):
         filename = c.TEAM_NAME_TO_FILE_NAME.get(team, team.lower())
-        path = f"reports/{self.date_stamp}/{filename}.json"
+        path = os.path.join(c.REPORTS_BASE_PATH, self.date_stamp, f"{filename}.json")
         if not os.path.exists(path) and not self.suppress:
             raise FileNotFoundError(f"File not found: {path}")
 
@@ -28,8 +26,8 @@ class TodaysStatsReporter:
     def find_duplicate_domains(self):
         domains = set()
         duplicate_domains = set()
-        for name in self.team_names:
-            team_table_data = parse_report(self.get_report_path(name), silent=True)
+        for file_name in self.file_names:
+            team_table_data = parse_report(os.path.join(c.REPORTS_BASE_PATH, self.date_stamp, file_name), silent=True)
             for row in team_table_data:
                 if row == SEPARATING_LINE:
                     continue
@@ -47,24 +45,27 @@ class TodaysStatsReporter:
         print()
 
     def print_full_report(self):
-        for name in self.team_names:
-            print(tabulate([name]))
-            parse_report(self.get_report_path(name))
+        for file_name in self.file_names:
+            print(tabulate([file_name]))
+            parse_report(
+                os.path.join(c.REPORTS_BASE_PATH, self.date_stamp, file_name),
+                silent=False
+            )
             print()
 
     def print_summary_report(self):
         top_level_table_data = []
 
-        if len(self.team_names) == 0:
+        if len(self.file_names) == 0:
             return
 
         try:
-            for name in self.team_names:
+            for file_name in self.file_names:
                 top_level_table_data.extend(
                     parse_report(
-                        self.get_report_path(name),
+                        os.path.join(c.REPORTS_BASE_PATH, self.date_stamp, file_name),
                         summary=True,
-                        summary_domain_name=name,
+                        summary_domain_name=c.FILE_NAME_TO_TEAM_NAME.get(Path(file_name).stem, file_name),
                         silent=True
                     )
                 )
