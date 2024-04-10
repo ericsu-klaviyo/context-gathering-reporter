@@ -1,0 +1,22 @@
+{
+  "files": {
+    "client/shared/i18n/translations/export-analytics/en-US/translations.json": {
+      "stats": {
+        "missing": [
+          "bannerNotification"
+        ],
+        "found": [
+          "selectStartDate",
+          "selectEndDate"
+        ],
+        "missingCount": 1,
+        "foundCount": 2
+      },
+      "fileUri": "...",
+      "paths": [
+        "/..."
+      ]
+    }
+  },
+  "totalMissing": 546
+}
