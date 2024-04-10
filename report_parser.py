@@ -77,7 +77,7 @@ if __name__ == "__main__":
 
     if args.date and not args.silent:
         print(f"{args.date}\n")
-    parse_report(args.filepath, args.summary, args.silent)
+    parse_report(args.filepath, summary=args.summary, silent=args.silent)
 
 
 
