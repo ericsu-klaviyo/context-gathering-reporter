@@ -7,9 +7,9 @@ TOTAL_STR = "Total"
 # Give teams custom or specifically formatted names here
 APIS_TEAM_NAME = "APIs"
 CCC_TEAM_NAME = "Catalog, Coupon, & Custom Objects"
-FLOWS_IM_TEAM_NAME = "Insight & Management"
-FLOWS_INTERFACE_TEAM_NAME = "Interface"
-FLOWS_PLATFORM_TEAM_NAME = "Platform"
+FLOWS_IM_TEAM_NAME = "Flows Insight & Management"
+FLOWS_INTERFACE_TEAM_NAME = "Flows Interface"
+FLOWS_PLATFORM_TEAM_NAME = "Flows Platform"
 
 # Custom teams names with mismatching file names should be defined here (lowercase, hyphenated)
 TEAM_NAME_TO_FILE_NAME = {
