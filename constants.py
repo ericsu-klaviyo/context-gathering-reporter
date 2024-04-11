@@ -29,6 +29,7 @@ TEAM_NAME_TO_FILE_NAME = {
     SMS_MARKET_EXPANSION_TEAM_NAME: "sms-market-expansion",
 }
 
+# Define domain ownership for domains that may have been found in multiple teams' reports
 DOMAIN_OWNERSHIP = {
     "filter-builder": TEAM_NAME_TO_FILE_NAME[FLOWS_IM_TEAM_NAME],
 }
