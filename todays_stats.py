@@ -20,6 +20,8 @@ class TodaysStatsReporter:
             self.file_names = list(map(lambda team: get_team_file_name(team), team_group))
         else:
             self.file_names = os.listdir(os.path.join(c.REPORTS_BASE_PATH, self.date_stamp))
+        
+        self.file_names.sort()
 
     def get_team_report_path(self, team: str):
         filename = get_team_file_name(team)

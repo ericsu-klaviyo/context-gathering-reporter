@@ -1,6 +1,6 @@
 Context Gathering Reporter
+This repository contains a collection of scripts to aid in the summarization of i18n context gathering reports. This was originally made for Flows teams and certain features may contain Flows remnants.
 ===
-This repository contains a collection of scripts to aid in the summarization of i18n context gathering reports. This was originally made for Flows teams and certain features may be coded for Flows teams.
 
 The `reports/2024-04-02` directory has been included as an example, otherwise other report directories and files are not committed to the repository.
 
@@ -39,7 +39,6 @@ reports/
 ### Arguments
 - `--summary`: Print the team's high level data
 - `--date`: Specify the date to be printed (date is currently not assumed based on file location)
-- `--silent`: Don't print anything (used internally by other modules)
 
 ### Examples
 To get the report of a single file:
@@ -61,7 +60,7 @@ web-feeds                            10  26%
 - `--date`: Pick a different date than today's date in `YYYY-MM-DD` format
 - `--duplicates`: Print out any unassigned duplicate domains found. This will still print out the report so using this is recommended in tandem with `--summary`
 - `--group`: Print the reports for a known group of teams. An unknown group name will print all downloaded reports. (Ex. `flows`, `mobile`, `integrations`)
-    - Group definitions can be found in `constants.TEAM_GROUPS`
+    - See [#Groups](#Groups) below
 
 ### Examples
 
@@ -119,3 +118,28 @@ web-feeds                            10  26%
 --------------------------  -----------  ---
 Total                                94  60%
 ```
+
+### Groups
+Groups are simply a collection of teams that may be associated with each other. Group definitions can be found in
+`constants.py` under `TEAM_GROUPS`. Some groups were best guess approximations.
+
+Current Groups include:
+- `flows`:
+    - Interface
+    - Insight & Management
+    - Platform
+- `integrations`
+    - Advertising Expansion
+    - Ecomm SaaS
+    - Ecomm Self-Hosted
+    - Velocity
+- `mobile`
+    - Core
+    - Push
+- `reporting`
+    - Reporting
+    - Reporting Consistency
+- `sms`
+    - Compliance Automation
+    - Delivery
+    - Market Expansion
