@@ -6,7 +6,7 @@ from datetime import date
 from pathlib import Path
 from report_parser import parse_report
 from tabulate import tabulate, SEPARATING_LINE
-from utils import get_team_file_name, get_team_from_file_name
+from utils.naming import get_team_file_name, get_team_name_from_file_name
 
 class TodaysStatsReporter:
     def __init__(self, date_stamp: str, summary=False, suppress=False, group=None):
@@ -52,7 +52,7 @@ class TodaysStatsReporter:
 
     def print_full_report(self):
         for file_name in self.file_names:
-            print(tabulate([get_team_from_file_name(file_name)]))
+            print(tabulate([get_team_name_from_file_name(file_name)]))
             parse_report(
                 os.path.join(c.REPORTS_BASE_PATH, self.date_stamp, file_name),
                 silent=False
@@ -71,7 +71,7 @@ class TodaysStatsReporter:
                     parse_report(
                         os.path.join(c.REPORTS_BASE_PATH, self.date_stamp, file_name),
                         summary=True,
-                        summary_domain_name=get_team_from_file_name(file_name),
+                        summary_domain_name=get_team_name_from_file_name(file_name),
                         silent=True
                     )
                 )
