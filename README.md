@@ -1,6 +1,6 @@
 Context Gathering Reporter
-This repository contains a collection of scripts to aid in the summarization of i18n context gathering reports. This was originally made for Flows teams and certain features may contain Flows remnants.
 ===
+This repository contains a collection of scripts to aid in the summarization of i18n context gathering reports. This was originally made for Flows teams and certain features may contain Flows remnants.
 
 The `reports/2024-04-02` directory has been included as an example, otherwise other report directories and files are not committed to the repository.
 
@@ -21,39 +21,23 @@ The `reports/2024-04-02` directory has been included as an example, otherwise ot
 For "Today's Stats", context gathering reports are expected to be downloaded in the repository's `/reports` directory:
 ```
 reports/
--- YYYY-MM-DD/
-    -- team-file-name.json
+    YYYY-MM-DD/
+        team-file-name.json
 ```
 
 For Flows teams, this looks like the following for April 2nd, 2024:
 ```
 reports/
--- 2024-04-02/
-    -- flows-insight-management.json
-    -- information-architecture.json
-    -- flows-platform.json
+    2024-04-02/
+        flows-insight-management.json
+        information-architecture.json
+        flows-platform.json
 ```
 
 # Usage
-## Single Report File
-### Arguments
-- `--summary`: Print the team's high level data
-- `--date`: Specify the date to be printed (date is currently not assumed based on file location)
-
-### Examples
-To get the report of a single file:
-```
-> python report_parser.py reports/2024-04-02/flows-platform.json
-
-Domain                        # Missing    %
---------------------------  -----------  ---
-flows-debug-tools                     1   5%
-flows-evaluations-activity           83  85%
-web-feeds                            10  26%
---------------------------  -----------  ---
-```
-
 ## Today's Reports
+Print information for all downloaded reports for the current (or custom defined) date.
+
 ### Arguments
 - `--summary`: Print high level data at the team level
 - `--suppress`: Suppress most errors related to missing files and return what can be found
@@ -119,7 +103,27 @@ web-feeds                            10  26%
 Total                                94  60%
 ```
 
-### Groups
+## Single Report File
+Print information for a single report file.
+
+### Arguments
+- `--summary`: Print the team's high level data
+- `--date`: Specify the date to be printed (date is currently not assumed based on file location)
+
+### Examples
+To get the report of a single file:
+```
+> python report_parser.py reports/2024-04-02/flows-platform.json
+
+Domain                        # Missing    %
+--------------------------  -----------  ---
+flows-debug-tools                     1   5%
+flows-evaluations-activity           83  85%
+web-feeds                            10  26%
+--------------------------  -----------  ---
+```
+
+# Groups
 Groups are simply a collection of teams that may be associated with each other. Group definitions can be found in
 `constants.py` under `TEAM_GROUPS`. Some groups were best guess approximations.
 
