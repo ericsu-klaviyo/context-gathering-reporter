@@ -18,8 +18,8 @@ DOMAIN_OWNERSHIP = {
     "filter-builder": TEAM_NAME_TO_FILE_NAME[FLOWS_IM_TEAM_NAME],
 }
 
-FILE_NAME_TO_TEAM_NAME = {
-    "flows-insight-management": FLOWS_IM_TEAM_NAME,
-    "information-architecture": FLOWS_INTERFACE_TEAM_NAME,
-    "flows-platform": FLOWS_PLATFORM_TEAM_NAME,
+FILE_NAME_TO_TEAM_NAME = {v: k for k, v in TEAM_NAME_TO_FILE_NAME.items()}
+
+TEAM_GROUPS = {
+    "flows": [FLOWS_IM_TEAM_NAME, FLOWS_INTERFACE_TEAM_NAME, FLOWS_PLATFORM_TEAM_NAME],
 }
