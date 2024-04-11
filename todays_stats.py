@@ -33,7 +33,11 @@ class TodaysStatsReporter:
         domains = set()
         duplicate_domains = set()
         for file_name in self.file_names:
-            team_table_data = parse_report(os.path.join(c.REPORTS_BASE_PATH, self.date_stamp, file_name), silent=True)
+            team_table_data = parse_report(
+                os.path.join(c.REPORTS_BASE_PATH, self.date_stamp, file_name),
+                silent=True,
+                suppress=self.suppress
+            )
             for row in team_table_data:
                 if row == SEPARATING_LINE:
                     continue
@@ -55,7 +59,8 @@ class TodaysStatsReporter:
             print(tabulate([get_team_name_from_file_name(file_name)]))
             parse_report(
                 os.path.join(c.REPORTS_BASE_PATH, self.date_stamp, file_name),
-                silent=False
+                silent=False,
+                suppress=self.suppress
             )
             print()
 
@@ -72,7 +77,8 @@ class TodaysStatsReporter:
                         os.path.join(c.REPORTS_BASE_PATH, self.date_stamp, file_name),
                         summary=True,
                         summary_domain_name=get_team_name_from_file_name(file_name),
-                        silent=True
+                        silent=True,
+                        suppress=self.suppress
                     )
                 )
             
