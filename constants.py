@@ -4,11 +4,14 @@ TABLE_HEADERS = ["Domain", "# Missing", "%"]
 TABLE_COLALIGN = ("left","right","right")
 TOTAL_STR = "Total"
 
+APIS_TEAM_NAME = "APIs"
+CCC_TEAM_NAME = "Catalog, Coupon, & Custom Objects"
 FLOWS_IM_TEAM_NAME = "Insight & Management"
 FLOWS_INTERFACE_TEAM_NAME = "Interface"
 FLOWS_PLATFORM_TEAM_NAME = "Platform"
 
 TEAM_NAME_TO_FILE_NAME = {
+    CCC_TEAM_NAME: "ccc",
     FLOWS_IM_TEAM_NAME: "flows-insight-management",
     FLOWS_INTERFACE_TEAM_NAME: "information-architecture",
     FLOWS_PLATFORM_TEAM_NAME: "flows-platform",
@@ -22,4 +25,23 @@ FILE_NAME_TO_TEAM_NAME = {v: k for k, v in TEAM_NAME_TO_FILE_NAME.items()}
 
 TEAM_GROUPS = {
     "flows": [FLOWS_IM_TEAM_NAME, FLOWS_INTERFACE_TEAM_NAME, FLOWS_PLATFORM_TEAM_NAME],
+    "integrations": [
+        "integrations-advertising-expansion",
+        "integrations-ecom-saas",
+        "integrations-ecom-self-hosted",
+        "integrations-velocity"
+    ],
+    "mobile": [
+        "mobile-core",
+        "mobile-push-team"
+    ],
+    "reporting": [
+        "reporting-consistency",
+        "reporting"
+    ],
+    "sms": [
+        "sms-compliance-automation",
+        "sms-delivery",
+        "sms-market-expansion",
+    ]
 }
