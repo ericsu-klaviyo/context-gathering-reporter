@@ -21,9 +21,9 @@ For Flows teams, this looks like the following for April 2nd, 2024:
 ```
 reports/
 -- 2024-04-01/
-    -- flims.json
-    -- interface.json
-    -- platform.json
+    -- flows-insight-management.json
+    -- information-architecture.json
+    -- flows-platform.json
 ```
 
 # Usage
