@@ -3,23 +3,29 @@ import os
 import constants as c
 
 from datetime import date
+from pathlib import Path
 from report_parser import parse_report
 from tabulate import tabulate, SEPARATING_LINE
+from utils.naming import get_team_file_name, get_team_name_from_file_name
 
 class TodaysStatsReporter:
-    def __init__(self, date_stamp: str, summary=False, suppress=False):
+    def __init__(self, date_stamp: str, summary=False, suppress=False, group=None):
         self.date_stamp = date_stamp
         self.summary = summary
         self.suppress = suppress
-        self.team_names = [
-            c.FLOWS_INTERFACE_TEAM_NAME,
-            c.FLOWS_IM_TEAM_NAME,
-            c.FLOWS_PLATFORM_TEAM_NAME
-        ]
 
-    def get_report_path(self, team: str):
-        filename = c.TEAM_NAME_TO_FILE_NAME.get(team, team.lower())
-        path = f"reports/{self.date_stamp}/{filename}.json"
+        self.group = group
+        team_group = c.TEAM_GROUPS.get(group)
+        if team_group is not None:
+            self.file_names = list(map(lambda team: get_team_file_name(team), team_group))
+        else:
+            self.file_names = os.listdir(os.path.join(c.REPORTS_BASE_PATH, self.date_stamp))
+        
+        self.file_names.sort()
+
+    def get_team_report_path(self, team: str):
+        filename = get_team_file_name(team)
+        path = os.path.join(c.REPORTS_BASE_PATH, self.date_stamp, filename)
         if not os.path.exists(path) and not self.suppress:
             raise FileNotFoundError(f"File not found: {path}")
 
@@ -28,8 +34,12 @@ class TodaysStatsReporter:
     def find_duplicate_domains(self):
         domains = set()
         duplicate_domains = set()
-        for name in self.team_names:
-            team_table_data = parse_report(self.get_report_path(name), silent=True)
+        for file_name in self.file_names:
+            team_table_data = parse_report(
+                os.path.join(c.REPORTS_BASE_PATH, self.date_stamp, file_name),
+                silent=True,
+                suppress=self.suppress
+            )
             for row in team_table_data:
                 if row == SEPARATING_LINE:
                     continue
@@ -47,25 +57,30 @@ class TodaysStatsReporter:
         print()
 
     def print_full_report(self):
-        for name in self.team_names:
-            print(tabulate([name]))
-            parse_report(self.get_report_path(name))
+        for file_name in self.file_names:
+            print(tabulate([get_team_name_from_file_name(file_name)]))
+            parse_report(
+                os.path.join(c.REPORTS_BASE_PATH, self.date_stamp, file_name),
+                silent=False,
+                suppress=self.suppress
+            )
             print()
 
     def print_summary_report(self):
         top_level_table_data = []
 
-        if len(self.team_names) == 0:
+        if len(self.file_names) == 0:
             return
 
         try:
-            for name in self.team_names:
+            for file_name in self.file_names:
                 top_level_table_data.extend(
                     parse_report(
-                        self.get_report_path(name),
+                        os.path.join(c.REPORTS_BASE_PATH, self.date_stamp, file_name),
                         summary=True,
-                        summary_domain_name=name,
-                        silent=True
+                        summary_domain_name=get_team_name_from_file_name(file_name),
+                        silent=True,
+                        suppress=self.suppress
                     )
                 )
             
@@ -93,12 +108,14 @@ if __name__ == "__main__":
     parser.add_argument("--suppress", action="store_true", help="Suppress errors and return what is available.")
     parser.add_argument("--date", help="If not today, when?")
     parser.add_argument("--duplicates", action="store_true", help="Find duplicate domains.")
+    parser.add_argument("--group", help="The group of teams to report on.")
     args = parser.parse_args()
 
     stats_reporter = TodaysStatsReporter(
         date.today().isoformat() if not args.date else args.date,
         args.summary,
-        args.suppress
+        args.suppress,
+        group=args.group
     )
 
     stats_reporter.get_reports()
